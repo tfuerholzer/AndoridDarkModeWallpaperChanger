@@ -1,10 +1,10 @@
 package com.tfuerholzer.darkmodewallpaper
 
 import android.app.WallpaperManager
+import android.app.WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER
+import android.app.WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT
+import android.content.ComponentName
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Bitmap.createScaledBitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -19,7 +19,6 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import android.Manifest.permission.READ_EXTERNAL_STORAGE as READ_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE as WRITE_STORAGE
 import android.content.pm.PackageManager.PERMISSION_GRANTED as GRANTED
-
 
 const val SELECT_IMAGE_DARKMODE = 1
 const val SELECT_IMAGE_LIGHTMODE = 2
@@ -44,12 +43,14 @@ open class MainActivity : AppCompatActivity() {
             metrics.heightPixels.toFloat() / metrics.widthPixels.toFloat()
         }()
     protected val ratioString get() = "1000 : " + (ratio * 1000).toInt()
+    protected lateinit var wallpaperManager : WallpaperManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         cleanPrefs()
         initViews()
+        initVariables()
         checkAndGetPermissions()
     }
 
@@ -73,15 +74,15 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
+    protected fun initVariables() {
+        wallpaperManager = WallpaperManager.getInstance(baseContext)
+    }
+
     protected open fun initViews() {
         darkmodeWallpaperImageview = findViewById(R.id.wallpaperDark)
         lightmodeWallpaperImageview = findViewById(R.id.wallpaperLight)
         button = findViewById(R.id.setWallpaperButton)
-        button.setOnClickListener {
-            val intent = Intent()
-            intent.action = WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER
-            startActivity(intent)
-        }
+        button.setOnClickListener(this::handleButtonClick)
         with(darkmodeWallpaperImageview) {
             (layoutParams as ConstraintLayout.LayoutParams).dimensionRatio = ratioString
             setOnClickListener {
@@ -168,6 +169,16 @@ open class MainActivity : AppCompatActivity() {
         activity.setAspectRatio(1000, (1000 * ratio).toInt())
         activity.setInitialCropWindowPaddingRatio(0f)
         return activity.getIntent(baseContext)
+    }
+
+    protected fun handleButtonClick(button : View){
+        val intent = Intent()
+        intent.action = WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER
+        val packagename = DarkmodeWallpaperService::class.java.`package`!!.name
+        val classname = DarkmodeWallpaperService::class.java.canonicalName!!
+        val component = ComponentName(packagename,classname)
+        intent.putExtra(EXTRA_LIVE_WALLPAPER_COMPONENT,component)
+        startActivity(intent)
     }
 
 
