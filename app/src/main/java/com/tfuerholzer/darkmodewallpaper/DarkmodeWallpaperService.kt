@@ -57,8 +57,8 @@ class DarkmodeWallpaperService : WallpaperService() {
         }
 
         private fun initBitmaps() {
-            val darkmodeUri = retrieveUri(DARKMODE_IMAGE_URI)
-            val lightmodeUri = retrieveUri(LIGHTMODE_IMAGE_URI)
+            val darkmodeUri = retrieveUri("")
+            val lightmodeUri = retrieveUri("")
             if (darkmodeUri.exists()) {
                 darkmodeBitmap = BitmapFactory.decodeStream(darkmodeUri!!.toFile().inputStream())
             }
