@@ -1,9 +1,10 @@
 package com.tfuerholzer.darkmodewallpaper
 
 import android.app.WallpaperManager
-import android.app.WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT
+import android.app.WallpaperManager.*
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
@@ -28,11 +29,19 @@ open class MainActivity : AppCompatActivity() {
         get() =
             checkSelfPermission(READ_STORAGE) == GRANTED
 
+    protected lateinit var wallpaperManager: WallpaperManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getInstance(baseContext)
         setContentView(R.layout.activity_main)
+        forcePortraitMode()
         initViews()
         checkAndGetPermissions()
+    }
+
+    protected fun forcePortraitMode() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
     }
 
     protected fun checkAndGetPermissions() {
@@ -57,11 +66,11 @@ open class MainActivity : AppCompatActivity() {
 
     protected fun handleButtonClick(button : View){
         val intent = Intent()
-        intent.action = WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER
-        val packagename = WallpaperService::class.java.`package`!!.name
+        intent.action = ACTION_CHANGE_LIVE_WALLPAPER
+        val packagename = packageName
         val classname = WallpaperService::class.java.canonicalName!!
         val component = ComponentName(packagename,classname)
-        //intent.putExtra(EXTRA_LIVE_WALLPAPER_COMPONENT,component)
+        intent.putExtra(EXTRA_LIVE_WALLPAPER_COMPONENT,component)
         startActivity(intent)
     }
 
