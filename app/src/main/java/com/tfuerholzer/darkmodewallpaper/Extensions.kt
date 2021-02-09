@@ -1,14 +1,22 @@
 package com.tfuerholzer.darkmodewallpaper
 
+import android.R.attr.data
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Rect
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.core.net.toFile
+import com.tfuerholzer.darkmodewallpaper.preferences.Theme
+
 
 fun Uri?.exists(): Boolean {
     return this != null && this.toFile() != null && this.toFile().exists()
+}
+
+fun Uri.readBitmap(context: Context) : Bitmap{
+    return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver,this))
 }
 
 fun Context.getAppPrefs() = getSharedPreferences("app", Context.MODE_PRIVATE)
@@ -30,6 +38,8 @@ val Context.isNightmodeEnabled : Boolean
         currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }()
 
+val Context.currentTheme : Theme
+    get() = if(this.isNightmodeEnabled) Theme.DARKMODE else Theme.LIGHTMODE
 
 
 

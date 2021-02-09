@@ -2,12 +2,29 @@ package com.tfuerholzer.darkmodewallpaper.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.net.Uri
-import androidx.core.content.edit
 import androidx.core.net.toFile
 import com.tfuerholzer.darkmodewallpaper.getAppPrefs
+import com.tfuerholzer.darkmodewallpaper.preferences.Theme.*
+import java.lang.Integer.parseInt
+import java.util.stream.Collectors
 
-class PreferenceManager (val context : Context){
+class PreferenceManager (private val context : Context){
+
+    private val prefs : SharedPreferences
+        get() = context.getAppPrefs()
+
+    var singleScreenMode = prefs.getBoolean(IS_SINGLE_SCREEN_MODE,true)
+        set(value){
+            field = value
+            val editor = prefs.edit()
+            editor.putBoolean(IS_SINGLE_SCREEN_MODE,value)
+            editor.commit()
+        }
+
+    var defaultAspectRatio : AspectRatio? = null
 
     init {
         cleanupPrefs()
@@ -19,8 +36,7 @@ class PreferenceManager (val context : Context){
         }
     }
 
-    private val prefs : SharedPreferences
-        get() = context.getAppPrefs()
+
 
     fun put(key : String, value : String){
         if (!value.equals(EMPTY_VALUE)){
@@ -72,11 +88,48 @@ class PreferenceManager (val context : Context){
         return if (value == null) null else Uri.parse(value)
     }
 
+    fun getDefault(theme: Theme) : String?{
+        val value =  prefs.all.entries.stream()
+            .filter { it.value is String && isWallpaperKey(it.key) }
+            .map { Pair(parseWallpaperKey(it.key), it.value as String) }
+            .filter { it.first.first == theme }
+            .sorted { o1, o2 -> o1.first.second.screenHeight - o2.first.second.screenHeight }
+            .findFirst()
+            .orElse(null)
+        return value.second
+    }
+
+    fun getDefaultURI(theme: Theme) : Uri?{
+        val value = getDefault(theme)
+        return if (value == null) null else Uri.parse(value)
+    }
+
+    fun getAllWallpaperPrefs(): MutableList<Pair<String, Uri>> {
+        return prefs.all.entries.parallelStream()
+            .filter { isWallpaperKey(it.key) && it.value is String}
+            .map { Pair(it.key, Uri.parse(it.value as String)) }
+            .collect(Collectors.toList())
+    }
+
     companion object{
-        private const val  KEY_PREFIX = "DARKMODE_WP_"
+        private const val  WALLPAPER_PREFIX = "WALLPAPER_"
         private const val EMPTY_VALUE = "EMPTY_VALUE"
+        private const val IS_SINGLE_SCREEN_MODE = "IS_SINGLE_SCREEN_MODE"
+        private const val KEY_PREFIX_LEN = WALLPAPER_PREFIX.length
+
         fun generateKeyString(theme : Theme, aspectRatio: AspectRatio) : String{
-            return "${KEY_PREFIX}_${theme.themeCode}_${aspectRatio.aspectRatioDataString}"
+            return "${WALLPAPER_PREFIX}${theme.themeCode}_${aspectRatio}"
+        }
+
+        fun isWallpaperKey(potentialKeyString : String) : Boolean = potentialKeyString.startsWith(
+            WALLPAPER_PREFIX)
+
+        fun parseWallpaperKey(keyString : String) : Pair<Theme, AspectRatio>{
+            val split = keyString.drop(KEY_PREFIX_LEN).split('_')
+            val themeCode = parseInt(split[0])
+            val theme = if (themeCode == Configuration.UI_MODE_NIGHT_NO) LIGHTMODE else DARKMODE
+            val aspectRatio = AspectRatio.parseAspectRatioString(split[1])
+            return Pair(theme,aspectRatio)
         }
     }
 

@@ -14,6 +14,7 @@ import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
 import android.Manifest.permission.READ_EXTERNAL_STORAGE as READ_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE as WRITE_STORAGE
 import android.content.pm.PackageManager.PERMISSION_GRANTED as GRANTED
+import com.tfuerholzer.darkmodewallpaper.services.DarkmodeWallpaperService as WallpaperService
 
 open class MainActivity : AppCompatActivity() {
 
@@ -57,10 +58,10 @@ open class MainActivity : AppCompatActivity() {
     protected fun handleButtonClick(button : View){
         val intent = Intent()
         intent.action = WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER
-        val packagename = DarkmodeWallpaperService::class.java.`package`!!.name
-        val classname = DarkmodeWallpaperService::class.java.canonicalName!!
+        val packagename = WallpaperService::class.java.`package`!!.name
+        val classname = WallpaperService::class.java.canonicalName!!
         val component = ComponentName(packagename,classname)
-        intent.putExtra(EXTRA_LIVE_WALLPAPER_COMPONENT,component)
+        //intent.putExtra(EXTRA_LIVE_WALLPAPER_COMPONENT,component)
         startActivity(intent)
     }
 
