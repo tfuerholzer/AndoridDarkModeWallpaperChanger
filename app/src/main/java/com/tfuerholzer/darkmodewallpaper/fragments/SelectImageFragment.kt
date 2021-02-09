@@ -35,8 +35,8 @@ class SelectImageFragment : Fragment(R.layout.select_image_fragment){
     private fun initElements() {
         val view = this.view
         if (view != null){
-            darkmodeImage = view.findViewById(R.id.wallpaperDark2)
-            lightmodeImage = view.findViewById(R.id.wallpaperLight2)
+            darkmodeImage = view.findViewById(R.id.wallpaperDark)
+            lightmodeImage = view.findViewById(R.id.wallpaperLight)
         }
         val wallManager = WallpaperManager.getInstance(requireContext())
         aspectRatio = AspectRatio(wallManager.desiredMinimumHeight,wallManager.desiredMinimumWidth)
