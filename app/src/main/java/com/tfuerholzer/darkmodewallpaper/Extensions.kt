@@ -2,13 +2,17 @@ package com.tfuerholzer.darkmodewallpaper
 
 import android.R.attr.data
 import android.content.Context
+import android.content.pm.ShortcutInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toFile
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme
 
@@ -48,5 +52,9 @@ val Context.isNightmodeEnabled : Boolean
 val Context.currentTheme : Theme
     get() = if(this.isNightmodeEnabled) Theme.DARKMODE else Theme.LIGHTMODE
 
+fun Drawable.toIcon(asSquare : Boolean = false, adaptive : Boolean = true): Icon {
+    val bitmap = if (asSquare) toBitmap(64,64) else toBitmap()
+    return if (adaptive) Icon.createWithAdaptiveBitmap(bitmap) else Icon.createWithBitmap(bitmap)
+}
 
 

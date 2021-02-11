@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.tfuerholzer.darkmodewallpaper.R
+import com.tfuerholzer.darkmodewallpaper.ShortcutCreator
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
 import com.tfuerholzer.darkmodewallpaper.preferences.PreferenceManager
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.DARKMODE
@@ -59,13 +60,20 @@ class SelectImageFragment : Fragment(R.layout.select_image_fragment){
         val lightmodeUri = preferenceManager.getURI(LIGHTMODE,aspectRatio)
         val darkmodeUri = preferenceManager.getURI(DARKMODE,aspectRatio)
         when (which) {
-            lightmodeImage -> which.setImageURI(lightmodeUri)
-            darkmodeImage -> which.setImageURI(darkmodeUri)
+            lightmodeImage -> updateImage(which, lightmodeUri)
+            darkmodeImage -> updateImage(which, darkmodeUri)
             else -> {
-                darkmodeImage.setImageURI(darkmodeUri)
-                lightmodeImage.setImageURI(lightmodeUri)
+                updateImage(darkmodeImage, darkmodeUri)
+                updateImage(lightmodeImage, lightmodeUri)
             }
         }
+    }
+
+    private fun updateImage(imageview: ImageView, imageUri: Uri?) {
+        imageview.setImageURI(imageUri)
+        val dynamic = imageUri != null
+        val theme = if(imageview == darkmodeImage) DARKMODE else LIGHTMODE
+        ShortcutCreator.updateShortcut(requireContext(), imageview, theme, dynamic)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -79,7 +87,7 @@ class SelectImageFragment : Fragment(R.layout.select_image_fragment){
                 val uriString = uri.toString()
                 val theme = if(requestCode == 100 + LIGHTMODE.themeCode) LIGHTMODE else DARKMODE
                 preferenceManager.put(theme, aspectRatio,uriString)
-                updateImages()
+                updateImages(if (theme == LIGHTMODE) lightmodeImage else darkmodeImage)
             }
         }
     }
@@ -102,5 +110,5 @@ class SelectImageFragment : Fragment(R.layout.select_image_fragment){
         this.updateImages();
     }
 
-
 }
+
