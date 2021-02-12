@@ -19,8 +19,8 @@ import com.theartofdev.edmodo.cropper.CropImageView
 
 class SelectImageFragment : Fragment(R.layout.select_image_fragment){
 
-    private lateinit var darkmodeImage : ImageView
-    private lateinit var lightmodeImage : ImageView
+    lateinit var darkmodeImage : ImageView
+    lateinit var lightmodeImage : ImageView
     private lateinit var preferenceManager: PreferenceManager
     var aspectRatio: AspectRatio = AspectRatio(1,2)
         protected set

@@ -19,6 +19,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragment
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
+import com.tfuerholzer.darkmodewallpaper.preferences.Theme
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.DARKMODE
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.LIGHTMODE
 import java.util.*
@@ -42,7 +43,10 @@ open class MainActivity : AppCompatActivity() {
     protected val systemSettingsGranted
         get() = Settings.System.canWrite(applicationContext) //checkSelfPermission(ACTION_MANAGE_WRITE_SETTINGS)  == GRANTED
 
+
     protected lateinit var wallpaperManager: WallpaperManager
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,22 @@ open class MainActivity : AppCompatActivity() {
         forcePortraitMode()
         initViews()
         checkAndGetPermissions()
+        checkIfLaunchedFromShortcut()
+    }
+
+    protected fun checkIfLaunchedFromShortcut() {
+        val extras = intent.extras
+        if (extras != null){
+            val themeCode = extras.getInt(ShortcutCreator.SHORTCUT_THEME)
+            if (themeCode > 0){
+                val theme = Theme.fromCode(themeCode)
+                val imageview = if (theme == LIGHTMODE)
+                    selectImageFragment.lightmodeImage
+                else
+                    selectImageFragment.darkmodeImage
+                imageview.callOnClick()
+            }
+        }
     }
 
 
@@ -76,6 +96,7 @@ open class MainActivity : AppCompatActivity() {
         selectImageFragment = (supportFragmentManager.findFragmentById(R.id.selectImageFrag) as SelectImageFragment?)!!
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
+        windowManager.defaultDisplay.getRealMetrics(displayMetrics)
         selectImageFragment.changeAspectRatio(AspectRatio(displayMetrics))
         button.setOnLongClickListener(this::handleLongButtonClick)
         button.setOnClickListener(this::handleButtonClick)

@@ -4,8 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.graphics.Color
+import android.graphics.ColorFilter
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
+import com.tfuerholzer.darkmodewallpaper.preferences.PreferenceManager
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme
 import java.util.stream.Collectors
 

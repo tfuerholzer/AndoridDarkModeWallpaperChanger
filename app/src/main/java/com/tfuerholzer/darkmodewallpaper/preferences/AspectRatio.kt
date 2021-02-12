@@ -6,6 +6,8 @@ import android.graphics.Rect
 import android.hardware.display.DisplayManager
 import android.util.DisplayMetrics
 import android.view.Display
+import android.view.View
+import android.widget.ImageView
 import com.tfuerholzer.darkmodewallpaper.math.gcd
 import java.lang.Integer.*
 
@@ -15,6 +17,8 @@ data class AspectRatio(val screenHeight: Int, val screenWidth: Int) {
             this (screenHeight = display.heightPixels, screenWidth = display.widthPixels)
 
     constructor(display: Rect) : this(screenHeight = display.height(), screenWidth = display.width())
+
+    constructor(imageView : View) : this(imageView.height, imageView.width)
 
     val heightToWidthRatio: Float
         get() = screenHeight.toFloat() / screenWidth.toFloat()
