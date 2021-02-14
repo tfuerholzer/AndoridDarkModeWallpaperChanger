@@ -23,7 +23,7 @@ class BitmapCache (private val preferenceManager: PreferenceManager){
         preferenceManager.getAllWallpaperPrefs().parallelStream()
             .map{ Pair(PreferenceManager.parseWallpaperKey(it.first),it.second)}
             .filter { bitmapMap[it.first] == null }
-            .map { Pair(it.first, it.second.readBitmap(context)) }
+            .map { Pair(it.first, it.second.readBitmap(context,it.first.second)) }
             .forEach{ bitmapMap[it.first] = it.second}
     }
 
@@ -34,12 +34,12 @@ class BitmapCache (private val preferenceManager: PreferenceManager){
         }else{
             val uri = preferenceManager.getURI(theme, aspectRatio)
             if (uri != null){
-                val image = uri.readBitmap(context)
+                val image = uri.readBitmap(context,aspectRatio)
                 this.bitmapMap.put(theme,aspectRatio,image)
                 return image
             }else{
                 val uri = preferenceManager.getDefaultURI(theme)
-                val image = uri?.readBitmap(context) ?: NOT_FOUND_BITMAP
+                val image = uri?.readBitmap(context,aspectRatio) ?: NOT_FOUND_BITMAP
                 this.bitmapMap.put(theme,aspectRatio,image)
                 return image
             }

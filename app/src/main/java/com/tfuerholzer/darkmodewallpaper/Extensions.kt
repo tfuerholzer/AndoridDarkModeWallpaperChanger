@@ -1,8 +1,6 @@
 package com.tfuerholzer.darkmodewallpaper
 
-import android.R.attr.data
 import android.content.Context
-import android.content.pm.ShortcutInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,9 +9,9 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toFile
+import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme
 
 
@@ -21,11 +19,11 @@ fun Uri?.exists(): Boolean {
     return this != null && this.toFile() != null && this.toFile().exists()
 }
 
-fun Uri.readBitmap(context: Context) : Bitmap{
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+fun Uri.readBitmap(context: Context, aspectRatio: AspectRatio) : Bitmap{
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && false){
         return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver,this))
     }else{
-        return BitmapFactory.decodeFile(this.toFile().absolutePath)
+        return BitmapFactory.decodeFile(this.toFile().absolutePath).scale(aspectRatio)
     }
 
 }
@@ -56,5 +54,9 @@ fun Drawable.toIcon(asSquare : Boolean = false, adaptive : Boolean = true): Icon
     val bitmap = if (asSquare) toBitmap(64,64) else toBitmap()
     return if (adaptive) Icon.createWithAdaptiveBitmap(bitmap) else Icon.createWithBitmap(bitmap)
 }
+
+fun Bitmap.scale(aspectRatio: AspectRatio, filter : Boolean = true) =
+    Bitmap.createScaledBitmap(this,aspectRatio.screenWidth,aspectRatio.screenHeight,filter)
+
 
 

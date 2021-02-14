@@ -2,10 +2,8 @@ package com.tfuerholzer.darkmodewallpaper.services
 
 import android.content.res.Configuration
 import android.graphics.Paint
-import android.os.Build
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
-import com.tfuerholzer.darkmodewallpaper.BuildConfig
 import com.tfuerholzer.darkmodewallpaper.R
 import com.tfuerholzer.darkmodewallpaper.currentTheme
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
@@ -60,18 +58,9 @@ class DarkmodeWallpaperService : WallpaperService() {
                 if (holder != null && holder.surfaceFrame != null) {
                     val ar = AspectRatio(surfaceHolder.surfaceFrame)
                     val bitmap = cache.get(baseContext, baseContext.currentTheme, ar)
-                    val canvas = holder.lockHardwareCanvas()
-                    canvas.drawBitmap(
-                        bitmap!!,
-                        null,
-                        surfaceHolder.surfaceFrame,
-                        Paint(R.color.amoledBlack)
-                    )
-                    canvas.save()
-                    try {
-                        surfaceHolder.unlockCanvasAndPost(canvas)
-                    } catch (ignored: Exception) {
-                    }
+                    val canvas = holder.lockCanvas()
+                    canvas.drawBitmap(bitmap,0f,0f, Paint(R.color.amoledBlack))
+                    surfaceHolder.unlockCanvasAndPost(canvas)
                 }
             }
             if (async){
