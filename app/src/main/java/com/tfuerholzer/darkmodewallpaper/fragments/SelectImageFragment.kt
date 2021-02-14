@@ -22,6 +22,7 @@ open class SelectImageFragment(layoutID: Int = R.layout.select_image_fragment) :
     lateinit var darkmodeImage : ImageView
     lateinit var lightmodeImage : ImageView
     protected lateinit var preferenceManager: PreferenceManager
+    protected var overrideShortcuts : Boolean = true
     var aspectRatio: AspectRatio = AspectRatio(1,2)
         protected set
 
@@ -70,9 +71,11 @@ open class SelectImageFragment(layoutID: Int = R.layout.select_image_fragment) :
 
     private fun updateImage(imageview: ImageView, imageUri: Uri?) {
         imageview.setImageURI(imageUri)
-        val dynamic = imageUri != null
-        val theme = if(imageview == darkmodeImage) DARKMODE else LIGHTMODE
-        ShortcutCreator.updateShortcut(requireContext(), imageview, theme, dynamic)
+        if (overrideShortcuts){
+            val dynamic = imageUri != null
+            val theme = if(imageview == darkmodeImage) DARKMODE else LIGHTMODE
+            ShortcutCreator.updateShortcut(requireContext(), imageview, theme, dynamic)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
