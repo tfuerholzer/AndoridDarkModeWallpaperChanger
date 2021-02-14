@@ -17,14 +17,13 @@ import com.tfuerholzer.darkmodewallpaper.preferences.Theme.LIGHTMODE
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 
-class SelectImageFragment : Fragment(R.layout.select_image_fragment){
+open class SelectImageFragment(layoutID: Int = R.layout.select_image_fragment) : Fragment(layoutID) {
 
     lateinit var darkmodeImage : ImageView
     lateinit var lightmodeImage : ImageView
-    private lateinit var preferenceManager: PreferenceManager
+    protected lateinit var preferenceManager: PreferenceManager
     var aspectRatio: AspectRatio = AspectRatio(1,2)
         protected set
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +32,7 @@ class SelectImageFragment : Fragment(R.layout.select_image_fragment){
         this.initEventHandler();
     }
 
-    private fun initElements() {
+    protected open fun initElements() {
         val view = this.view
         if (view != null){
             darkmodeImage = view.findViewById(R.id.wallpaperDark)

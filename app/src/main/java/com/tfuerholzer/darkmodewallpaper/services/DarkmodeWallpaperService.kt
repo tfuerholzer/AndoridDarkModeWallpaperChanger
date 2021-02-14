@@ -39,10 +39,7 @@ class DarkmodeWallpaperService : WallpaperService() {
             }.start()
             lastTheme = currentTheme
             this.holder = surfaceHolder
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                configChangedCallback = this::onConfigChanged
-            }
+            configChangedCallback = this::onConfigChanged
         }
 
         fun onConfigChanged(config: Configuration) {
