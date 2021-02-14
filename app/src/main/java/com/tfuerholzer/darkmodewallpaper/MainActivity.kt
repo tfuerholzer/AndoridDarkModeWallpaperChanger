@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragment
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragmentOverUnder
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
+import com.tfuerholzer.darkmodewallpaper.preferences.PreferenceManager
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.DARKMODE
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.LIGHTMODE
@@ -32,6 +33,7 @@ open class MainActivity : AppCompatActivity() {
     protected lateinit var selectImageFragment: SelectImageFragment
     protected lateinit var selectImageFragmentOverUnder: SelectImageFragmentOverUnder
     protected lateinit var landscapeCheckBox: CheckBox
+    protected lateinit var preferenceManager: PreferenceManager
 
     protected val writeGranted
         get() =
@@ -56,6 +58,7 @@ open class MainActivity : AppCompatActivity() {
         initViews()
         checkAndGetPermissions()
         checkIfLaunchedFromShortcut()
+        handleCheckboxClick(landscapeCheckBox)
     }
 
     protected fun checkIfLaunchedFromShortcut() {
@@ -92,6 +95,7 @@ open class MainActivity : AppCompatActivity() {
 
 
     protected open fun initViews() {
+        this.preferenceManager = PreferenceManager(baseContext)
         button = findViewById(R.id.setWallpaperButton)
         landscapeCheckBox = findViewById(R.id.landscapeCheckBox)
         selectImageFragment = (supportFragmentManager.findFragmentById(R.id.selectImageFrag) as SelectImageFragment?)!!
@@ -104,6 +108,7 @@ open class MainActivity : AppCompatActivity() {
         button.setOnLongClickListener(this::handleLongButtonClick)
         button.setOnClickListener(this::handleButtonClick)
         landscapeCheckBox.setOnClickListener { handleCheckboxClick(it) }
+        landscapeCheckBox.isClickable = this.preferenceManager.singleScreenMode
     }
 
 
@@ -140,6 +145,7 @@ open class MainActivity : AppCompatActivity() {
 
     protected fun handleCheckboxClick(checkboxView : View) : Boolean{
         val checkbox = checkboxView as CheckBox
+        preferenceManager.singleScreenMode = !checkbox.isChecked
         val visibility = if (checkbox.isChecked) View.VISIBLE else View.GONE
         selectImageFragmentOverUnder.view?.visibility = visibility
         return true
