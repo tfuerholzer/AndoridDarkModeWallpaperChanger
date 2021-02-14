@@ -28,7 +28,6 @@ class DarkmodeWallpaperService : WallpaperService() {
         private var holder: SurfaceHolder? = null
 
         private lateinit var lastTheme: Theme
-
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
             cache = BitmapCache(baseContext)

@@ -17,4 +17,6 @@ class SelectImageFragmentOverUnder : SelectImageFragment(R.layout.select_image_f
         val wallManager = WallpaperManager.getInstance(requireContext())
         aspectRatio = AspectRatio(wallManager.desiredMinimumHeight,wallManager.desiredMinimumWidth)
     }
+
+
 }
