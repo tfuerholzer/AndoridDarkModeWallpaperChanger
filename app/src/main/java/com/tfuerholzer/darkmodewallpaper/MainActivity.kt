@@ -27,6 +27,10 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE as WRITE_STORAGE
 import android.content.pm.PackageManager.PERMISSION_GRANTED as GRANTED
 import com.tfuerholzer.darkmodewallpaper.services.DarkmodeWallpaperService as WallpaperService
 
+
+/**
+ * Hauptacitivity,
+ */
 open class MainActivity : AppCompatActivity() {
 
     protected lateinit var button: Button
@@ -41,10 +45,6 @@ open class MainActivity : AppCompatActivity() {
     protected val readGranted
         get() =
             checkSelfPermission(READ_STORAGE) == GRANTED
-
-    protected val systemSettingsGranted
-        get() = Settings.System.canWrite(applicationContext) //checkSelfPermission(ACTION_MANAGE_WRITE_SETTINGS)  == GRANTED
-
 
     protected lateinit var wallpaperManager: WallpaperManager
 
@@ -86,11 +86,9 @@ open class MainActivity : AppCompatActivity() {
             requestPermissions(arrayOf(WRITE_STORAGE), 0)
         }
         if (!this.readGranted && shouldShowRequestPermissionRationale(READ_STORAGE)) {
-            requestPermissions(arrayOf(READ_STORAGE), 0)
+            requestPermissions(arrayOf(READ_STORAGE),0)
         }
-        if (!this.systemSettingsGranted && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1){
-            showManageSettingsScreen()
-        }
+
     }
 
 
@@ -123,15 +121,6 @@ open class MainActivity : AppCompatActivity() {
     }
 
     protected fun handleLongButtonClick(button : View?): Boolean{
-        if (systemSettingsGranted){
-            val themeCode = if (currentTheme == DARKMODE) LIGHTMODE.themeCode else DARKMODE.themeCode
-            val config = Configuration()
-            Settings.System.getConfiguration(contentResolver,config)
-            if (config != null){
-                config.uiMode = themeCode
-                Settings.System.putConfiguration(contentResolver, config)
-            }
-        }
         return true;
     }
 

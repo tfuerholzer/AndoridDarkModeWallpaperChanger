@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Darkmode Wallpaper Changer</string>
     <string name="service_name">Theme changing Wallpaper</string>
-    <string name="text_bright_theme">Wallpaper for Bright theme</string>
-    <string name="text_dark_theme">Wallpaper for Dark theme</string>
+    <string name="text_bright_theme">Light-Theme Wallpaper</string>
+    <string name="text_dark_theme">Dark-Theme Wallpaper</string>
+    <string name="text_portrait_image">Portrait Mode wallpaper</string>
 </resources>
