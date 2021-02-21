@@ -6,8 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import com.google.android.material.card.MaterialCardView
 import com.tfuerholzer.darkmodewallpaper.R
 import com.tfuerholzer.darkmodewallpaper.ShortcutCreator
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
@@ -21,6 +24,10 @@ open class SelectImageFragment(layoutID: Int = R.layout.select_image_fragment) :
 
     lateinit var darkmodeImage : ImageView
     lateinit var lightmodeImage : ImageView
+    lateinit var darkmodeCard : CardView
+    lateinit var lightmodeCard : CardView
+    lateinit var warningText : TextView
+    lateinit var card : MaterialCardView
     protected lateinit var preferenceManager: PreferenceManager
     protected var overrideShortcuts : Boolean = true
     var aspectRatio: AspectRatio = AspectRatio(1,2)
@@ -38,6 +45,10 @@ open class SelectImageFragment(layoutID: Int = R.layout.select_image_fragment) :
         if (view != null){
             darkmodeImage = view.findViewById(R.id.wallpaperDark)
             lightmodeImage = view.findViewById(R.id.wallpaperLight)
+            lightmodeCard = view.findViewById(R.id.wallpaperLightCardview)
+            darkmodeCard = view.findViewById(R.id.wallpaperDarkCardview)
+            card = view.findViewById(R.id.materialCardLeftRight)
+            warningText = view.findViewById(R.id.warningOutput)
         }
         val wallManager = WallpaperManager.getInstance(requireContext())
         aspectRatio = AspectRatio(wallManager.desiredMinimumHeight,wallManager.desiredMinimumWidth)
@@ -103,9 +114,10 @@ open class SelectImageFragment(layoutID: Int = R.layout.select_image_fragment) :
         return activity.getIntent(requireContext())
     }
 
-    fun changeAspectRatio(aspectRatio: AspectRatio) {
+
+    open fun changeAspectRatio(aspectRatio: AspectRatio) {
         this.aspectRatio = aspectRatio;
-        listOf(darkmodeImage,lightmodeImage).forEach {
+        listOf(darkmodeCard,lightmodeCard).forEach {
             val params = it.layoutParams as ConstraintLayout.LayoutParams
             params.dimensionRatio = aspectRatio.aspectRatioString
         }

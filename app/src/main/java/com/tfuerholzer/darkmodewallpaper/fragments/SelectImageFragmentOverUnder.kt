@@ -20,5 +20,7 @@ class SelectImageFragmentOverUnder : SelectImageFragment(R.layout.select_image_f
         aspectRatio = AspectRatio(wallManager.desiredMinimumHeight,wallManager.desiredMinimumWidth)
     }
 
+    override fun changeAspectRatio(aspectRatio: AspectRatio) {
 
+    }
 }
