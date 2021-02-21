@@ -10,11 +10,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Group
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragment
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragmentOverUnder
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
@@ -22,6 +27,7 @@ import com.tfuerholzer.darkmodewallpaper.preferences.PreferenceManager
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.DARKMODE
 import com.tfuerholzer.darkmodewallpaper.preferences.Theme.LIGHTMODE
+import kotlinx.android.synthetic.main.activity_main.*
 import android.Manifest.permission.READ_EXTERNAL_STORAGE as READ_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE as WRITE_STORAGE
 import android.content.pm.PackageManager.PERMISSION_GRANTED as GRANTED
@@ -38,6 +44,8 @@ open class MainActivity : AppCompatActivity() {
     protected lateinit var selectImageFragmentOverUnder: SelectImageFragmentOverUnder
     protected lateinit var landscapeCheckBox: CheckBox
     protected lateinit var preferenceManager: PreferenceManager
+    protected lateinit var group : Group
+    protected lateinit var layout : ConstraintLayout
 
     protected val writeGranted
         get() =
@@ -94,6 +102,7 @@ open class MainActivity : AppCompatActivity() {
 
     protected open fun initViews() {
         this.preferenceManager = PreferenceManager(baseContext)
+        layout = findViewById(R.id.mainConstraintLayout)
         button = findViewById(R.id.setWallpaperButton)
         landscapeCheckBox = findViewById(R.id.landscapeCheckBox)
         selectImageFragment = (supportFragmentManager.findFragmentById(R.id.selectImageFrag) as SelectImageFragment?)!!
@@ -135,6 +144,7 @@ open class MainActivity : AppCompatActivity() {
     protected fun handleCheckboxClick(checkboxView : View) : Boolean{
         val checkbox = checkboxView as CheckBox
         preferenceManager.singleScreenMode = !checkbox.isChecked
+        TransitionManager.beginDelayedTransition(layout,AutoTransition())
         val visibility = if (checkbox.isChecked) View.VISIBLE else View.GONE
         selectImageFragmentOverUnder.view?.visibility = visibility
         return true
