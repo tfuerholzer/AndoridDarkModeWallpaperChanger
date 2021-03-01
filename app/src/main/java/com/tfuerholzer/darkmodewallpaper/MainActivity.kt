@@ -20,6 +20,7 @@ import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
+import androidx.core.view.isVisible
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragment
 import com.tfuerholzer.darkmodewallpaper.fragments.SelectImageFragmentOverUnder
 import com.tfuerholzer.darkmodewallpaper.preferences.AspectRatio
@@ -66,7 +67,7 @@ open class MainActivity : AppCompatActivity() {
         initViews()
         checkAndGetPermissions()
         checkIfLaunchedFromShortcut()
-        handleCheckboxClick(landscapeCheckBox)
+        initCheckboxValue()
     }
 
     protected fun checkIfLaunchedFromShortcut() {
@@ -112,10 +113,8 @@ open class MainActivity : AppCompatActivity() {
         val aspectRatio = AspectRatio(displayMetrics)
         selectImageFragment.changeAspectRatio(aspectRatio)
         selectImageFragmentOverUnder.changeAspectRatio(aspectRatio.inverted())
-        button.setOnLongClickListener(this::handleLongButtonClick)
         button.setOnClickListener(this::handleButtonClick)
         landscapeCheckBox.setOnClickListener { handleCheckboxClick(it) }
-        landscapeCheckBox.isClickable = this.preferenceManager.singleScreenMode
     }
 
 
@@ -144,10 +143,20 @@ open class MainActivity : AppCompatActivity() {
     protected fun handleCheckboxClick(checkboxView : View) : Boolean{
         val checkbox = checkboxView as CheckBox
         preferenceManager.singleScreenMode = !checkbox.isChecked
-        TransitionManager.beginDelayedTransition(layout,AutoTransition())
-        val visibility = if (checkbox.isChecked) View.VISIBLE else View.GONE
-        selectImageFragmentOverUnder.view?.visibility = visibility
+        changeVisibility(checkbox.isChecked)
         return true
     }
 
+
+    protected fun initCheckboxValue(){
+        val shouldBeVisible = preferenceManager.singleScreenMode
+        landscapeCheckBox.isChecked = shouldBeVisible
+        changeVisibility(shouldBeVisible)
+    }
+
+    protected fun changeVisibility(isVisible : Boolean){
+        TransitionManager.beginDelayedTransition(layout,AutoTransition())
+        val visibility = if (isVisible) View.VISIBLE else View.GONE
+        selectImageFragmentOverUnder.view?.visibility = visibility
+    }
 }

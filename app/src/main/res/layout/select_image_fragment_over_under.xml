@@ -23,38 +23,60 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/wallpaperLightSw"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/wallpaperLightCardviewLandscape"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
-                android:background="#FFFFFF"
+                app:cardCornerRadius="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/wallpaperLightTextSw"
                 app:layout_constraintDimensionRatio="16:9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_wb_sunny_black_24dp" />
+                app:layout_constraintTop_toBottomOf="@+id/landscapeTextView"
+                app:layout_constraintVertical_bias="0.0">
 
-            <ImageView
-                android:id="@+id/wallpaperDarkSw"
+                <ImageView
+                    android:id="@+id/wallpaperLightSw"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    app:srcCompat="@drawable/ic_wb_sunny_black_24dp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/wallpaperDarkCardviewLandscape"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/wallpaperDarkTextSw"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/wallpaperLightTextSw">
+
+
+            <ImageView
+                android:id="@+id/wallpaperDarkSw"
                 android:background="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/wallpaperDarkTextSw"
-                app:layout_constraintDimensionRatio="16:9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/wallpaperLightTextSw"
-                app:srcCompat="@drawable/ic_brightness_3_white_24dp" />
+                app:srcCompat="@drawable/ic_brightness_3_white_24dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"/>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/wallpaperLightTextSw"
@@ -66,10 +88,10 @@
                 android:text="@string/text_bright_theme"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/textcolor"
-                app:layout_constraintBottom_toTopOf="@+id/wallpaperDarkSw"
+                app:layout_constraintBottom_toTopOf="@+id/wallpaperDarkCardviewLandscape"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/wallpaperLightSw" />
+                app:layout_constraintTop_toBottomOf="@+id/wallpaperLightCardviewLandscape" />
 
             <TextView
                 android:id="@+id/wallpaperDarkTextSw"
@@ -83,8 +105,21 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/wallpaperDarkSw"
+                app:layout_constraintTop_toBottomOf="@+id/wallpaperDarkCardviewLandscape"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/landscapeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/landscapeText"
+                android:textAppearance="?attr/textAppearanceSearchResultTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
